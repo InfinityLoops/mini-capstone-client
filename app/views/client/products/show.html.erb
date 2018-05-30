@@ -7,6 +7,17 @@
 <% @product["images"].each do |image| %>
   <img src="<%= image["url"] %>">
 <% end %>
+<br>
+
+<%= form_tag "/client/orders", method: :post do %>
+  <div>
+    Product ID: <input type="text" name="product_id">
+  </div>
+  <div>
+    Quantity: <input type="text" name="quantity">
+  </div>
+  <input type="submit" value="Create Order">
+<% end %>
 
 <h6>Supplier: <%= @product["supplier"]["name"] %></h6>
 
