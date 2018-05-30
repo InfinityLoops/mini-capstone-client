@@ -10,9 +10,7 @@
 <br>
 
 <%= form_tag "/client/orders", method: :post do %>
-  <div>
-    Product ID: <input type="text" name="product_id">
-  </div>
+  <input type="hidden" name="product_id" value="<%= @product['id'] %>">
   <div>
     Quantity: <input type="text" name="quantity">
   </div>
