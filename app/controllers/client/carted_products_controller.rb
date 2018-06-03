@@ -19,4 +19,20 @@ class Client::CartedProductsController < ApplicationController
     @carted_product = response.body
     redirect_to "/client/carted_products"
   end
+
+  def destroy
+    carted_product_id = params[:id]
+    response = Unirest.delete("http://localhost:3000/api/carted_products/#{carted_product_id}")
+    redirect_to "/client/carted_products"
+  end
 end
+
+
+
+
+
+
+
+
+
+
