@@ -15,24 +15,30 @@ class Client::ProductsController < ApplicationController
   end
 
   def new
+    @product = {}
     render 'new.html.erb'
   end
 
   def create
-    client_params = {
-                     name: params[:name],
-                     price: params[:price],
-                     description: params[:description],
-                     supplier_id: params[:supplier_id]
-                    }
+    @product = {
+                   'name' => params[:name],
+                   'price' => params[:price],
+                   'description' => params[:description],
+                   'supplier_id' => params[:supplier_id]
+                  }
 
     response = Unirest.post(
                             "http://localhost:3000/api/products",
-                            parameters: client_params
+                            parameters: @product
                             )
 
-    flash[:success] = "Successfully created Product"
-    redirect_to "/client/products/"
+    if response.code == 200
+      flash[:success] = "Successfully created Product"
+      redirect_to "/client/products/"
+    else
+      @errors = response.body["errors"]
+      render 'new.html.erb'
+    end
   end
 
   def show
@@ -49,20 +55,27 @@ class Client::ProductsController < ApplicationController
   end
 
   def update
-    client_params = {
-                     name: params[:name],
-                     price: params[:price],
-                     description: params[:description],
-                     supplier_id: params[:supplier_id]
-                    }
+    @product = {
+                   'id' => params[:id],
+                   'name' => params[:name],
+                   'price' => params[:price],
+                   'description' => params[:description],
+                   'supplier_id' => params[:supplier_id],
+                   'supplier' => {'id' => params[:supplier_id]}
+                  }
 
     response = Unirest.patch(
                             "http://localhost:3000/api/products/#{params[:id]}",
-                            parameters: client_params
+                            parameters: @product
                             )
 
-    flash[:success] = "Successfully updated Product"
-    redirect_to "/client/products/#{params[:id]}"
+    if response.code == 200
+      flash[:success] = "Successfully updated Product"
+      redirect_to "/client/products/#{params[:id]}"
+    else
+      @errors = response.body['errors']
+      render 'edit.html.erb'
+    end
   end
 
   def destroy
