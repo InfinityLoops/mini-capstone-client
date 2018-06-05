@@ -35,6 +35,9 @@ class Client::ProductsController < ApplicationController
     if response.code == 200
       flash[:success] = "Successfully created Product"
       redirect_to "/client/products/"
+    elsif response.code == 401
+      flash[:warning] = "You are not Authorized to make a product"
+      redirect_to "/"
     else
       @errors = response.body["errors"]
       render 'new.html.erb'
