@@ -75,6 +75,9 @@ class Client::ProductsController < ApplicationController
     if response.code == 200
       flash[:success] = "Successfully updated Product"
       redirect_to "/client/products/#{params[:id]}"
+    elsif response.code == 401
+      flash[:warning] = "You are not Authorized"
+      redirect_to '/'
     else
       @errors = response.body['errors']
       render 'edit.html.erb'
@@ -83,7 +86,12 @@ class Client::ProductsController < ApplicationController
 
   def destroy
     response = Unirest.delete("http://localhost:3000/api/products/#{params['id']}")
-    flash[:success] = "Successfully destroyed product"
-    redirect_to "/client/products"
+    if response.code == 200
+      flash[:success] = "Successfully destroyed product"
+      redirect_to "/client/products"
+    else
+      flash[:warning] = "You are not Authorized"
+      redirect_to '/'
+    end
   end
 end
